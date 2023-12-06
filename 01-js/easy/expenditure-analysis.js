@@ -6,7 +6,17 @@
 */
 
 function calculateTotalSpentByCategory(transactions) {
-  return [];
+    let result = transactions.reduce((acc, curr) => {
+        // if (!acc.hasOwnProperty(curr['category'])) 
+        if (!(curr['category'] in acc))
+            acc[curr['category']] = 0;
+        acc[curr['category']] += curr['price'];
+        return acc;
+    }, {});
+    result = Object.keys(result).map(key => {
+        return {category: key, totalSpent: result[key]};
+    });
+    return result;
 }
 
 module.exports = calculateTotalSpentByCategory;
