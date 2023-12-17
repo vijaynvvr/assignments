@@ -7,7 +7,7 @@ const app = express();
 app.get('/', (req, res) => {
     fs.readFile('/01-js', 'utf-8', (err, data) => {
         res.json(data);
-        console.log(1);
+        console.log(2);
     });
 });
 
