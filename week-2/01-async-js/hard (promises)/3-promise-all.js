@@ -23,11 +23,11 @@ function wait3(t) {
 }
 
 function calculateTime(t1, t2, t3) {
-    let start = new Date().getTime();
-    Promise.all([wait1(t1), wait2(t2), wait3(t3)]).then((res) => {
-        let end = new Date().getTime();
+    const start = Date.now();
+    return Promise.all([wait1(t1), wait2(t2), wait3(t3)]).then(() => {
+        const end = Date.now();
         return end - start;
-    })
+    });
 }
 
 module.exports = calculateTime;

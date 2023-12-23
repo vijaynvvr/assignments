@@ -39,11 +39,99 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-  const express = require('express');
-  const bodyParser = require('body-parser');
-  
-  const app = express();
-  
-  app.use(bodyParser.json());
-  
-  module.exports = app;
+const express = require('express');
+const fs = require('fs');
+const app = express();
+const { v4: uuidv4 } = require('uuid');
+
+
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Working");
+})
+
+app.get("/todos", (req, res) => {
+  fs.readFile("./todos.json", "utf-8", (err, data) => {
+    if (err) res.send(err);
+    else res.status(200).json(JSON.parse(data));
+  });
+})
+
+app.get("/todos/:id", (req, res) => {
+  const id = req.params.id;
+  fs.readFile("./todos.json", "utf-8", (err, data) => {
+    if (err) res.send(err);
+    else {
+      const todoData = JSON.parse(data);
+      const dataFound = todoData.find(todo => todo.id === id);
+      if (!dataFound) res.status(404).send("Not Found");
+      else res.status(200).json(dataFound);
+    }
+  });
+})
+
+app.post("/todos", (req, res) => {
+  const id = uuidv4();
+  const completed = false;
+  const {title, description} = req.body;
+  const newTodo = {
+    id, title, description, completed
+  }
+  fs.readFile("./todos.json", "utf-8", (err, data) => {
+    if (err) res.send(err);
+    else {
+      const todoData = JSON.parse(data);
+      todoData.push(newTodo);
+      fs.writeFile("./todos.json", JSON.stringify(todoData), (err) => {
+        if (err) res.send(err);
+        res.status(201).json({id});
+      })
+    }
+  });
+})
+
+app.put("/todos/:id", (req, res) => {
+  const id = req.params.id;
+  fs.readFile("./todos.json", "utf-8", (err, data) => {
+    let todoData = JSON.parse(data);
+    const dataFound = todoData.find(todo => todo.id === id);
+    console.log(dataFound);
+    if (!dataFound) res.status(404).send("Not Found");
+    else {
+      const {title, description} = req.body;
+      const newTodo = {...dataFound, title, description};
+      todoData = todoData.map(todo => todo.id == id ? newTodo: todo);
+      fs.writeFile("./todos.json", JSON.stringify(todoData), (err) => {
+        if (err) res.send(err);
+        res.status(200).send("OK");
+      })
+    }
+  })
+})
+
+app.delete("/todos/:id", (req, res) => {
+  const id = req.params.id;
+  fs.readFile("./todos.json", "utf-8", (err, data) => {
+    if (err) res.send(err);
+    else {
+      const todoData = JSON.parse(data);
+      const dataFound = todoData.find(todo => todo.id === id);
+      if (!dataFound) res.status(404).send("Not Found");
+      else {
+        const filteredData = todoData.filter(todo => todo !== dataFound);
+        fs.writeFile("./todos.json", JSON.stringify(filteredData), (err) => {
+          if (err) res.send(err);
+          res.status(200).send("OK");
+        })
+      }
+    }
+  })
+})
+
+
+app.listen(8000, () => {
+  console.log("Connected on PORT: 8000");
+})
+
+module.exports = app;

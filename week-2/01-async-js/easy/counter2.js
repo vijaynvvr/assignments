@@ -9,27 +9,24 @@
 // counter2(1);
 
 // 2:
-function counter(i) {
-    console.clear();
-    setTimeout(() => {
-        console.log(i);
-        counter(++i);
-    }, 1000);
-}
-counter(1);
+// function counter(i) {
+//     console.clear();
+//     setTimeout(() => {
+//         console.log(i);
+//         counter(++i);
+//     }, 1000);
+// }
+// counter(1);
 
 
 let count = 0;
-
 function incrementCounter() {
     console.clear();
     count++;
     console.log(count);
     setTimeout(incrementCounter, 1000); // Call incrementCounter again after 1 second
 }
-
-// Start the counter
-// incrementCounter();
+incrementCounter();
 
 
 // 3:
@@ -38,6 +35,6 @@ function incrementCounter() {
 //     setTimeout(() => {
 //         console.clear();
 //         console.log(i);
+//         i++;
 //     }, 1000);
-//     i++;
 // }

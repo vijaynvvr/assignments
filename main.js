@@ -1,14 +1,29 @@
-const express = require('express');
-const fs = require('fs');
+const axios = require('axios');
 
-
-const app = express();
-
-app.get('/', (req, res) => {
-    fs.readFile('/01-js', 'utf-8', (err, data) => {
-        res.json(data);
-        console.log(4);
-    });
+axios.post(
+    "http://localhost:5001/api/auth/login",
+    { email: "test@123", password: "test@123" },
+)
+.then((data) => {
+    console.log(data.data);
+})
+.catch((err) => {
+    console.log(err);
 });
 
-app.listen(3000);
+// fetch("http://localhost:5001/api/auth/login", {
+//     body: JSON.stringify({ email: "test@123", password: "test@123" }),
+//     method: "POST",
+//     headers: {
+//         "Content-Type": "application/json"
+//     }
+// })
+// .then((data) => {
+//     return data.json()
+// })
+// .then(jsonData => {
+//     console.log(jsonData);
+// })
+// .catch((err) => {
+//     console.log(err);
+// });
